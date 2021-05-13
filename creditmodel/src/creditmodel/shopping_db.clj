@@ -21,18 +21,10 @@
   []
   (group-by :category shopping))
 
-(add-shopping 1234 "10/02" 129 "Mc" "food")
-(add-shopping 1234 "10/02" 129 "Bk" "food")
-(add-shopping 1234 "11/11" 129 "Hering" "clothing")
-(add-shopping 1234 "9/09" 222 "Nike" "clothing")
-(add-shopping 1234 "4/05" 30 "Adidas" "clothing")
-(add-shopping 1234 "1/02" 129 "Mc" "food")
-;(println shopping)
-
 (defn shopping-map
   [[_ value]]
   {:category (:category value) :value (:value value)})
-git remote add origin https://github.com/MarinhoGabriel/NuChallenge.git
+
 (defn group-shopping
   []
   (group-by :category (map shopping-map shopping)))
@@ -41,4 +33,6 @@ git remote add origin https://github.com/MarinhoGabriel/NuChallenge.git
   [e1, e2]
   {:category (:category e1) :value (+ (:value e1) (:value e2))})
 
-(println (map #((reduce reduce-shopping %) %) (vals (group-shopping))))
+(defn total-by-category
+  []
+  (map #((reduce reduce-shopping %) %) (vals (group-shopping))))
