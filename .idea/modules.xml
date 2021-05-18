@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/creditmodel/creditmodel.iml" filepath="$PROJECT_DIR$/creditmodel/creditmodel.iml" />
-      <module fileurl="file://$PROJECT_DIR$/nuchallenge.iml" filepath="$PROJECT_DIR$/nuchallenge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/creditmodel.iml" filepath="$PROJECT_DIR$/creditmodel.iml" />
     </modules>
   </component>
 </project>
