@@ -39,3 +39,8 @@
                    :db/valueType   :db.type/double
                    :db/cardinality :db.cardinality/one
                    :db/doc         "The limit value for that credit card"}])
+
+(defn create-schemata "Saves the created schemata in database"
+  [connection]
+  (datomic/transact connection client-schema)
+  (datomic/transact connection card-schema))
