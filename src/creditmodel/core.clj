@@ -22,5 +22,5 @@
 (c.sdb/add-shopping (get (c.cdb/get-card-by-client-cpf "00") :number) "1/02" 129 "Mc" "food")
 (println (c.sdb/shopping-list "01"))
 
-(c.sdb/total-by-category)
+(println (c.sdb/total-by-category))
 (println c.sdb/shopping-by-category)

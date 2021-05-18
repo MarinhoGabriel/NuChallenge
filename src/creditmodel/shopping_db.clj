@@ -29,9 +29,9 @@
 (defn reduce-shopping
   [e1, e2]
   (def shopping-by-category (assoc shopping-by-category (keyword (:category e1)) {
-                                                                                                      :category (:category e1)
-                                                                                                      :value (+ (:value e1) (:value e2))
-                                                                                                      }))
+                                                                                  :category (:category e1)
+                                                                                  :value    (+ (:value e1) (:value e2))
+                                                                                  }))
   {:category (:category e1) :value (+ (:value e1) (:value e2))})
 
 (defn total-by-category
