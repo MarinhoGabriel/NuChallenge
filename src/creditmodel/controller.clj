@@ -14,3 +14,9 @@
   [name cpf email connection]
   (let [client (create-client name cpf email)]
     (datomic/transact connection [client])))
+
+(defn- save-card "Saves a card in the database using the model created at `creditmodel.model.card`.
+  The function receives the minus (-) sign as a visual indicator that this is a private function.
+  The function returns the inserted object."
+  [card connection]
+  @(datomic/transact connection [card]))
