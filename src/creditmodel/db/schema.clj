@@ -40,7 +40,31 @@
                    :db/cardinality :db.cardinality/one
                    :db/doc         "The limit value for that credit card"}])
 
+; Schema to represent a shopping on database
+(def shopping-schema [
+                      {:db/ident       :shopping/merchant
+                       :db/valueType   :db.type/string
+                       :db/cardinality :db.cardinality/one
+                       :db/doc         "The vendor's name"}
+                      {:db/ident       :shopping/category
+                       :db/valueType   :db.type/string
+                       :db/cardinality :db.cardinality/one
+                       :db/doc         "The vendor's shop category"}
+                      {:db/ident       :shopping/value
+                       :db/valueType   :db.type/double
+                       :db/cardinality :db.cardinality/one
+                       :db/doc         "The value of the shopping"}
+                      {:db/ident       :shopping/date
+                       :db/valueType   :db.type/instant
+                       :db/cardinality :db.cardinality/one
+                       :db/doc         "The date when the operation was made"}
+                      {:db/ident       :shopping/card
+                       :db/valueType   :db.type/ref
+                       :db/cardinality :db.cardinality/one
+                       :db/doc         "The client's card used in the operation"}])
+
 (defn create-schemata "Saves the created schemata in database"
   [connection]
   (datomic/transact connection client-schema)
-  (datomic/transact connection card-schema))
+  (datomic/transact connection card-schema)
+  (datomic/transact connection shopping-schema))
