@@ -16,9 +16,14 @@
   (schemata/create-schemata connection)
 
   ;; Inserting clients in database
-  (controller/save-client "Gabriel Marinho" (str (long (rand 100000000000))) "gabriel.marinho@gmail.com" connection)
-  (controller/save-client "Vitoria G." (str (long (rand 100000000000))) "vitoria.g@gmail.com" connection)
-  (controller/save-client "Yasmin S." (str (long (rand 100000000000))) "yasmin.s@gmail.com" connection))
+  (controller/save-client "Gabriel Marinho" "00000000000" "gabriel.marinho@gmail.com" connection)
+  (controller/save-client "Vitoria G." "11111111111" "vitoria.g@gmail.com" connection)
+  (controller/save-client "Yasmin S." "22222222222" "yasmin.s@gmail.com" connection)
+
+  ;; Adding cards to the clients
+  (controller/add-card-to-client "00000000000" connection)
+  (controller/add-card-to-client "11111111111" connection)
+  (controller/add-card-to-client "22222222222" connection))
 
 ; Running the application
 (run)
