@@ -1,10 +1,10 @@
-(ns creditmodel.controller
+(ns br.com.marinho.creditmodel.controller
   (:use clojure.pprint)
-  (:require [creditmodel.model.client :as client]
-            [creditmodel.model.card :as card]
-            [creditmodel.model.shopping :as shopping]
-            [creditmodel.db.database :as db]
-            [creditmodel.db.schema :as schemata]
+  (:require [br.com.marinho.creditmodel.model.client :as client]
+            [br.com.marinho.creditmodel.model.card :as card]
+            [br.com.marinho.creditmodel.model.shopping :as shopping]
+            [br.com.marinho.creditmodel.db.database :as db]
+            [br.com.marinho.creditmodel.db.schema :as schemata]
             [datomic.api :as datomic]))
 
 ; Defining the connection as nil at first to redefine ir at `start-controller` method
@@ -22,7 +22,7 @@
   ;; Creating the schemata
   (schemata/create-schemata connection))
 
-(defn- create-client "Creates a client using the created model defined at `creditmodel.model.client`.
+(defn- create-client "Creates a client using the created model defined at `br.com.marinho.creditmodel.model.client`.
   The function receives the minus (-) sign as a visual indicator that this is a private function."
   [name cpf email]
   (client/new-client name cpf email))
@@ -41,7 +41,7 @@
   (datomic/q '[:find (pull ?e [:client/name :client/email :client/cpf :client/card])
                :where [?e :client/name]] (datomic/db connection)))
 
-(defn- save-card "Saves a card in the database using the model created at `creditmodel.model.card`.
+(defn- save-card "Saves a card in the database using the model created at `br.com.marinho.creditmodel.model.card`.
   The function receives the minus (-) sign as a visual indicator that this is a private function.
   The function returns the inserted object."
   [card]

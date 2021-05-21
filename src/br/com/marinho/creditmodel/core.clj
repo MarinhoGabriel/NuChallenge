@@ -1,8 +1,8 @@
-(ns creditmodel.core
+(ns br.com.marinho.creditmodel.core
   (:use clojure.pprint)
   (:import (java.text SimpleDateFormat))
   (:require
-    [creditmodel.controller :as controller]))
+    [br.com.marinho.creditmodel.controller :as controller]))
 
 ; Date format used to creating shopping registers.
 (def date-format (SimpleDateFormat. "yyyy-MM-dd HH:mm:ss"))

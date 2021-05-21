@@ -1,4 +1,4 @@
-(ns creditmodel.db.database
+(ns br.com.marinho.creditmodel.db.database
   (:use clojure.pprint)
   (:require [datomic.api :as datomic]))
 
