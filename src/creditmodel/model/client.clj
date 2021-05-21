@@ -1,7 +1,17 @@
-(ns creditmodel.model.client)
+(ns creditmodel.model.client
+  (:import (java.util UUID)))
 
-(defn new-client "Creates an object of a client"
-  [name cpf email]
-  {:client/name  name
-   :client/cpf   cpf
-   :client/email email})
+(defn generate-uuid "Generates a new unique UUID used in the client registers."
+  []
+  (UUID/randomUUID))
+
+(defn new-client "Creates an object of a client. Both functions create a new client, but the second one
+  receives an uuid fro outside."
+  ([name cpf email]
+   (new-client (generate-uuid) name cpf email))
+
+  ([uuid name cpf email]
+   {:client/id    uuid
+    :client/name  name
+    :client/cpf   cpf
+    :client/email email}))

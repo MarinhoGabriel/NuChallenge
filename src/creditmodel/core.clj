@@ -47,6 +47,14 @@
   (controller/save-shopping "Puma" "Clothing" 241.04 (.parse date-format "2021-03-13 10:08:17") "11111111111")
   (controller/save-shopping "Doodle, Mr. Doughnut" "Food" 149.51 (.parse date-format "2021-05-15 11:53:43") "11111111111")
 
+  (controller/save-shopping "iPlace" "Electronics"  49.84 (.parse date-format "2021-04-13 13:46:28") "22222222222")
+  (controller/save-shopping "Adidas" "Clothing"  42.24 (.parse date-format "2021-03-03 10:11:14") "22222222222")
+  (controller/save-shopping "Spotify" "Streaming" 116.09 (.parse date-format "2021-03-17 16:29:08") "22222222222")
+  (controller/save-shopping "Hering" "Clothing"  89.27 (.parse date-format "2021-01-12 07:44:28") "22222222222")
+  (controller/save-shopping "Abebe Skin" "Health care" 110.69 (.parse date-format "2021-03-31 09:11:53") "22222222222")
+  (controller/save-shopping "Netflix" "Streaming" 212.46 (.parse date-format "2021-04-30 02:19:17") "22222222222")
+  (controller/save-shopping "Parme" "Food" 215.49 (.parse date-format "2021-02-01 17:07:38") "22222222222")
+
   (println "\nAll shopping")
   (pprint (controller/get-shopping))
 
@@ -54,7 +62,10 @@
   (pprint (controller/shopping-by-client "00000000000"))
 
   (println "\nShopping by client 'Vitoria G.'")
-  (pprint (controller/shopping-by-client "11111111111")))
+  (pprint (controller/shopping-by-client "11111111111"))
+
+(println "\nShopping by client 'Yasmin S.'")
+(pprint (controller/shopping-by-client "22222222222")))
 
 ; Running the application
 (run)

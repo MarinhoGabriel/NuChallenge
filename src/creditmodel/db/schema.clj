@@ -3,7 +3,11 @@
   (:require [datomic.api :as datomic]))
 
 ; Schema to represent a client on database.
-(def client-schema [
+(def client-schema [{:db/ident       :client/id
+                     :db/valueType   :db.type/uuid
+                     :db/cardinality :db.cardinality/one
+                     :db/unique      :db.unique/identity
+                     :db/doc         "The unique id of the client"}
                     {:db/ident       :client/name
                      :db/valueType   :db.type/string
                      :db/cardinality :db.cardinality/one
@@ -22,7 +26,11 @@
                      :db/doc         "The client's card reference"}])
 
 ; Schema to represent a card on database.
-(def card-schema [
+(def card-schema [{:db/ident       :card/id
+                   :db/valueType   :db.type/uuid
+                   :db/cardinality :db.cardinality/one
+                   :db/unique      :db.unique/identity
+                   :db/doc         "The unique id of the card"}
                   {:db/ident       :card/number
                    :db/valueType   :db.type/long
                    :db/cardinality :db.cardinality/one
@@ -41,7 +49,11 @@
                    :db/doc         "The limit value for that credit card"}])
 
 ; Schema to represent a shopping on database
-(def shopping-schema [
+(def shopping-schema [{:db/ident       :shopping/id
+                       :db/valueType   :db.type/uuid
+                       :db/cardinality :db.cardinality/one
+                       :db/unique      :db.unique/identity
+                       :db/doc         "The unique id of the shopping"}
                       {:db/ident       :shopping/merchant
                        :db/valueType   :db.type/string
                        :db/cardinality :db.cardinality/one
