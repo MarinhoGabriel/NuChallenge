@@ -38,7 +38,7 @@
 (defn get-clients "Returns all the clients stores in the database using a map structure, with `pull`
   command."
   []
-  (datomic/q '[:find (pull ?e [:client/name :client/email :client/cpf :client/card])
+  (datomic/q '[:find (pull ?e [:client/name :client/email :client/cpf {:client/card [*]}])
                :where [?e :client/name]] (datomic/db connection)))
 
 (defn- save-card "Saves a card in the database using the model created at `br.com.marinho.creditmodel.model.card`.
