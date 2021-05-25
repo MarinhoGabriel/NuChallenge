@@ -6,7 +6,8 @@ the main language. Also, a Kafka Client is used to establish communication betwe
 services.<br>
 The package is able to create clients, add cards to the created clients and check
 the purchases made by the clients. <br>
-Below we can see the diagram of the project.
+Below we can see the diagram of the communication system of the project.<br>
+
 ![diagram](communication/resources/br/com/marinho/creditmodel/communication/credit-model-diagram.png)
 
 ## Usage
