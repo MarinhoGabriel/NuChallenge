@@ -1,4 +1,4 @@
-(ns br.com.marinho.creditmodel.model.card
+(ns br.com.marinho.core.model.card
   (:import (java.text SimpleDateFormat)
            (java.util UUID)))
 

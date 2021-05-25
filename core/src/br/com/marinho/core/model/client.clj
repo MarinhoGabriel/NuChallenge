@@ -1,4 +1,4 @@
-(ns br.com.marinho.creditmodel.model.client
+(ns br.com.marinho.core.model.client
   (:import (java.util UUID)))
 
 (defn generate-uuid "Generates a new unique UUID used in the client registers."
