@@ -48,29 +48,29 @@
                    :db/cardinality :db.cardinality/one
                    :db/doc         "The limit value for that credit card"}])
 
-; Schema to represent a shopping on database
-(def shopping-schema [{:db/ident       :shopping/id
+; Schema to represent a purchase on database
+(def purchase-schema [{:db/ident       :purchase/id
                        :db/valueType   :db.type/uuid
                        :db/cardinality :db.cardinality/one
                        :db/unique      :db.unique/identity
-                       :db/doc         "The unique id of the shopping"}
-                      {:db/ident       :shopping/merchant
+                       :db/doc         "The unique id of the purchase"}
+                      {:db/ident       :purchase/merchant
                        :db/valueType   :db.type/string
                        :db/cardinality :db.cardinality/one
                        :db/doc         "The vendor's name"}
-                      {:db/ident       :shopping/category
+                      {:db/ident       :purchase/category
                        :db/valueType   :db.type/string
                        :db/cardinality :db.cardinality/one
                        :db/doc         "The vendor's shop category"}
-                      {:db/ident       :shopping/value
+                      {:db/ident       :purchase/value
                        :db/valueType   :db.type/double
                        :db/cardinality :db.cardinality/one
-                       :db/doc         "The value of the shopping"}
-                      {:db/ident       :shopping/date
+                       :db/doc         "The value of the purchase"}
+                      {:db/ident       :purchase/date
                        :db/valueType   :db.type/instant
                        :db/cardinality :db.cardinality/one
                        :db/doc         "The date when the operation was made"}
-                      {:db/ident       :shopping/card
+                      {:db/ident       :purchase/card
                        :db/valueType   :db.type/ref
                        :db/cardinality :db.cardinality/one
                        :db/doc         "The client's card used in the operation"}])
@@ -79,4 +79,4 @@
   [connection]
   (datomic/transact connection client-schema)
   (datomic/transact connection card-schema)
-  (datomic/transact connection shopping-schema))
+  (datomic/transact connection purchase-schema))

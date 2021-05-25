@@ -2,7 +2,7 @@
   (:use clojure.pprint)
   (:require [br.com.marinho.creditmodel.model.client :as client]
             [br.com.marinho.creditmodel.model.card :as card]
-            [br.com.marinho.creditmodel.model.shopping :as shopping]
+            [br.com.marinho.creditmodel.model.purchase :as purchase]
             [br.com.marinho.creditmodel.db.database :as db]
             [br.com.marinho.creditmodel.db.schema :as schemata]
             [datomic.api :as datomic]))
@@ -27,7 +27,7 @@
   [name cpf email]
   (client/new-client name cpf email))
 
-(defn save-client "Saves a client in databae using the `connection` object passed as parameter.
+(defn save-client! "Saves a client in databae using the `connection` object passed as parameter.
   Inside the function, the `create-client` privte function is called to store the result value,
   representing the new client, in a symbol inside of a `let` and, after that, this value is
   used to store a new register in database."
@@ -41,13 +41,13 @@
   (datomic/q '[:find (pull ?e [:client/name :client/email :client/cpf {:client/card [*]}])
                :where [?e :client/name]] (datomic/db connection)))
 
-(defn- save-card "Saves a card in the database using the model created at `br.com.marinho.creditmodel.model.card`.
+(defn- save-card! "Saves a card in the database using the model created at `br.com.marinho.creditmodel.model.card`.
   The function receives the minus (-) sign as a visual indicator that this is a private function.
   The function returns the inserted object."
   [card]
   @(datomic/transact connection [card]))
 
-(defn add-card-to-client "Adds a card to the client, using the CPF.
+(defn add-card-to-client! "Adds a card to the client, using the CPF.
   The function creates a new card using the `card/new-card` function and stores it in database inside
   a threading first execution. This threading first gives us the id of the insertion that was made in
   database to use this id as the value for the client's card.
@@ -58,7 +58,7 @@
   and so on."
   [client-cpf]
   (let [card (card/new-card)]
-    (let [saved-card-id (-> (save-card card) :tempids vals first)
+    (let [saved-card-id (-> (save-card! card) :tempids vals first)
           client (datomic/q '[:find ?e
                               :in $ ?client-cpf
                               :keys id
@@ -76,40 +76,84 @@
                [?e :client/card ?card]]
              (datomic/db connection) client-cpf))
 
-(defn save-shopping "Saves a new shopping register in database.
-  At first, the function get the card id from the client who made the shopping, that is represented by the `client-cpf`
-  parameter. After getting the card id, the function just creates a new shopping object and saves it in database."
+(defn save-purchase! "Saves a new purchase register in database.
+  At first, the function get the card id from the client who made the purchase, that is represented by the `client-cpf`
+  parameter. After getting the card id, the function just creates a new purchase object and saves it in database."
   [merchant category value date client-cpf]
   (let [card-id (:id (get (card-by-client client-cpf) 0))]
-    (datomic/transact connection [(shopping/new-shopping merchant category value date card-id)])))
+    (datomic/transact connection [(purchase/new-purchase merchant category value date card-id)])))
 
-(defn get-shopping "Returns the shopping list with all information about the shopping, including the card number and
+(defn get-purchase "Returns the purchase list with all information about the purchase, including the card number and
   the clients' name and cpf."
   []
   (datomic/q '[:find ?merchant ?category ?price ?date ?number ?name ?cpf
-               :keys shopping/merchant shopping/category shopping/price shopping/date card/number client/name client/cpf
-               :where [?e :shopping/merchant ?merchant]
-               [?e :shopping/category ?category]
-               [?e :shopping/value ?price]
-               [?e :shopping/date ?date]
-               [?e :shopping/card ?card]
+               :keys purchase/merchant purchase/category purchase/price purchase/date card/number client/name client/cpf
+               :where [?e :purchase/merchant ?merchant]
+               [?e :purchase/category ?category]
+               [?e :purchase/value ?price]
+               [?e :purchase/date ?date]
+               [?e :purchase/card ?card]
                [?card :card/number ?number]
                [?client :client/card ?card]
                [?client :client/name ?name]
                [?client :client/cpf ?cpf]] (datomic/db connection)))
 
-(defn shopping-by-client "Returns all shopping made by a client with the CPF value equals to `client-cpf` parameter.
+(defn purchases-by-client? "Returns all purchases made by a client with the CPF value equals to `client-cpf` parameter.
   Differently from the method above, this method does not return the clients' name and CPF because we're talking
-  about all shopping made by JUST ONE client."
+  about all purchases made by JUST ONE client."
   [client-cpf]
   (datomic/q '[:find ?merchant ?category ?price ?date ?number
                :in $ ?client-cpf
-               :keys shopping/merchant shopping/category shopping/price shopping/date card/number
-               :where [?e :shopping/merchant ?merchant]
-               [?e :shopping/category ?category]
-               [?e :shopping/value ?price]
-               [?e :shopping/date ?date]
-               [?e :shopping/card ?card]
+               :keys purchase/merchant purchase/category purchase/price purchase/date card/number
+               :where [?e :purchase/merchant ?merchant]
+               [?e :purchase/category ?category]
+               [?e :purchase/value ?price]
+               [?e :purchase/date ?date]
+               [?e :purchase/card ?card]
                [?card :card/number ?number]
                [?client :client/cpf ?client-cpf]
                [?client :client/card ?card]] (datomic/db connection) client-cpf))
+
+(defn max-purchase-count-by-client? "Returns the name of the name of the client who has the higher number of purchases
+  saved in the database.
+  The method used a threading last to:
+    1. get the map of `total_purchases` by `client_name`
+    2. getting the higher key
+    3. get the value of the map element with that key."
+  []
+  (->> (datomic/q '[:find (count ?purchase) ?client-name
+                    :keys total client
+                    :where [?card :card/number]
+                    [?purchase :purchase/card ?card]
+                    [?client :client/card ?card]
+                    [?client :client/name ?client-name]] (datomic/db connection))
+       (apply max-key :total)
+       (:client)
+       (println "The client who made more purchases was")))
+
+(defn most-valued-purchase? "Returns the name of the client who made the most valued purchase."
+  []
+  (->> (datomic/q '[:find ?name
+                    :where [(q '[:find (max ?value)
+                                 :where [_ :purchase/value ?value]]
+                               $) [[?value]]]
+                    [?e :purchase/value ?value]
+                    [?e :purchase/card ?number]
+                    [?client :client/card ?number]
+                    [?client :client/name ?name]] (datomic/db connection))
+       ffirst
+       (println "Most valued purchase made by")))
+
+(defn client-with-no-purchase? "Returns the name of the client who does not made any purchases."
+  []
+  (let [client (->> (datomic/q '[:find ?name
+                                 :where [?card :card/number]
+                                 [?client :client/card ?card]
+                                 [?client :client/name ?name]
+                                 (not-join [?card]
+                                           [?purchase :purchase/card ?card])
+                                 ], (datomic/db connection))
+                    ffirst)]
+    (if client
+       (str (str client) " hasn't made any purchase.")
+       (str "All clients have made at least one purchase."))))
