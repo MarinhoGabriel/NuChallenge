@@ -1,4 +1,4 @@
-(ns br.com.marinho.core.model.purchase
+(ns br.com.marinho.creditmodel.core.model.purchase
   (:import (java.util UUID)))
 
 (defn generate-uuid "Generates a new unique UUID used in the purchase registers."

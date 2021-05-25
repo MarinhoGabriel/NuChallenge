@@ -2,10 +2,12 @@
 
 A Clojure package used to simulate e credit card system model with clients cards.
 The package counts with Datomic database to store the data and Cloure as
-the main language.<br>
+the main language. Also, a Kafka Client is used to establish communication between the 
+services.<br>
 The package is able to create clients, add cards to the created clients and check
-the purchases made by the clients. Also, the package can block a card from a client
-depending on some situation.
+the purchases made by the clients. <br>
+Below we can see the diagram of the project.
+![diagram](communication/resources/br/com/marinho/creditmodel/communication/credit-model-diagram.png)
 
 ## Usage
 
@@ -13,9 +15,3 @@ depending on some situation.
 ;; in collection under :dependencies key
 [br.com.marinho/creditmodel "0.1.0"]
 ```
-
-## References
-https://cursos.alura.com.br/course/clojure-introducao-a-programacao-funcional <br>
-https://cursos.alura.com.br/course/clojure-colecoes-no-dia-a-dia <br>
-https://cursos.alura.com.br/course/introducao-ao-datomic <br>
-https://cursos.alura.com.br/course/datomic-identidade-e-queries
