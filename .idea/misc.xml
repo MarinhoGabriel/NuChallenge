@@ -6,6 +6,7 @@
         <option value="file://$PROJECT_DIR$/project.clj" />
         <option value="file://$PROJECT_DIR$/core/project.clj" />
         <option value="file://$PROJECT_DIR$/communication/project.clj" />
+        <option value="file://$PROJECT_DIR$/logger/project.clj" />
       </list>
     </option>
   </component>

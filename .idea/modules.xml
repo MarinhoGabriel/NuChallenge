@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/communication/communication.iml" filepath="$PROJECT_DIR$/communication/communication.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/creditmodel.iml" filepath="$PROJECT_DIR$/creditmodel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/logger/logger.iml" filepath="$PROJECT_DIR$/logger/logger.iml" />
     </modules>
   </component>
 </project>
