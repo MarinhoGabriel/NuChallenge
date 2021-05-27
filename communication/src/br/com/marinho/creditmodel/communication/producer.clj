@@ -1,4 +1,4 @@
-(ns br.com.marinho.communication.producer
+(ns br.com.marinho.creditmodel.communication.producer
   (:import (java.util Properties)
            (org.apache.kafka.clients.producer ProducerConfig ProducerRecord Callback
                                               KafkaProducer)
@@ -49,5 +49,4 @@
   (let [properties (create-properties)
         producer (create-producer properties)
         message (create-message topic-name key value)]
-    (.send producer message callback)
-    (.flush producer)))
+    (.send producer message callback)))
