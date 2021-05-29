@@ -4,5 +4,7 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.apache.kafka/kafka-clients "2.8.0"]
-                 [org.slf4j/slf4j-api "1.6.1"]]
+                 [org.slf4j/slf4j-api "1.6.1"]
+                 [core "0.1.0"]
+                 [org.clojure/data.json "2.3.1"]]
   :repl-options {:init-ns br.com.marinho.creditmodel.communication.core})

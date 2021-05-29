@@ -10,12 +10,14 @@
   is also listed in the string. The function has just one parameter, referring to the
   record itself."
   [record]
-  (str "Topic:" (.topic record)
-       "\n\tPartition:" (.partition record)
-       "\n\tTotal:" (.offset record)
-       "\n\tTimestamp:" (.timestamp record)
-       "\n\tKey:" (.key record)
-       "\n\tValue:" (.value record)))
+  (str "=================Consumed message================="
+       "\nTopic:" (.topic record)
+       "\nPartition:" (.partition record)
+       "\nTotal:" (.offset record)
+       "\nTimestamp:" (.timestamp record)
+       "\nKey:" (.key record)
+       "\nValue:" (.value record)
+       "\n=================================================="))
 
 (defn- create-properties "Creates the properties used to run the Kafka consumer. Those
   properties refers to the deserialization of the values that are consumed from the
@@ -36,12 +38,21 @@
 
 (defn consume "Function responsible for start the consumption of the informed topic(s)
   using the consumer, also passed as parameter. The function uses a recur to keep
-  reading information until a stop command is sent."
-  [consumer topic]
+  reading information until a stop command is sent. Also, the function has 3 parameters
+   representing the functions used to
+   1. validate the value got from the server,
+   2. do an operation when the validation returns true,
+   3. do another (or not) operation when the validation returns false."
+  [consumer topic valid? success fail]
   (with-open [cons consumer]
     (.subscribe cons topic)
     (loop []
       (let [duration (Duration/ofSeconds 1)
             poll-records (seq (.poll cons duration))]
-        (when poll-records (println (record-info? (first poll-records))))
-        (recur)))))
+        (when poll-records
+          (let [record (first poll-records)]
+            (println (record-info? record))
+            (if (valid? record)
+              (success record)
+              (fail record)))))
+      (recur))))

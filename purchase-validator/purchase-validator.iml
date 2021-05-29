@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module cursive.leiningen.project.LeiningenProjectsManager.displayName="logger:0.1.0" cursive.leiningen.project.LeiningenProjectsManager.isLeinModule="true" type="JAVA_MODULE" version="4">
+<module cursive.leiningen.project.LeiningenProjectsManager.displayName="purchase-validator:0.1.0" cursive.leiningen.project.LeiningenProjectsManager.isLeinModule="true" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/classes" />
@@ -19,6 +19,7 @@
     <orderEntry type="library" name="Leiningen: com.datomic/query-support:0.8.27" level="project" />
     <orderEntry type="library" name="Leiningen: com.github.luben/zstd-jni:1.4.9-1" level="project" />
     <orderEntry type="library" name="Leiningen: com.google.code.findbugs/jsr305:3.0.2" level="project" />
+    <orderEntry type="library" name="Leiningen: com.google.code.gson/gson:2.8.5" level="project" />
     <orderEntry type="library" name="Leiningen: com.google.errorprone/error_prone_annotations:2.3.4" level="project" />
     <orderEntry type="library" name="Leiningen: com.google.guava/failureaccess:1.0.1" level="project" />
     <orderEntry type="library" name="Leiningen: com.google.guava/guava:30.1-jre" level="project" />

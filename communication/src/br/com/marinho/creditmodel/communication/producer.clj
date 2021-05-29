@@ -8,10 +8,12 @@
   visualization better. The function has just one input, that is the metadata and
   returns a string with the formatted information about this metadata."
   [metadata]
-  (str "\nMetadata:\n\tTopic name: " (.topic metadata)
-    "\n\tPartition: " (.partition metadata)
-    "\n\tOffset: " (.offset metadata)
-    "\n\tTimestamp: " (.timestamp metadata)))
+  (str "=================Produced message================="
+       "\nTopic name: " (.topic metadata)
+       "\nPartition: " (.partition metadata)
+       "\nOffset: " (.offset metadata)
+       "\nTimestamp: " (.timestamp metadata)
+       "\n=================================================="))
 
 ; Symbol representing a send callback, used when the producer sends a  message to the
 ; server and we want to have access to the results of the operation.
@@ -37,16 +39,14 @@
   [topic key value]
   (ProducerRecord. topic key value))
 
-(defn- create-producer "Creates a new Kafka producer ready to send a message. The
+(defn create-producer "Creates a new Kafka producer ready to send a message. The
   function gets the properties as the only parameter."
-  [properties]
-  (KafkaProducer. ^Properties properties))
+  []
+  (KafkaProducer. ^Properties (create-properties)))
 
 (defn send-message! "Sends a message to the server using the topic specifies in the
   parameter. The other two parameters refer to the key and value of the message that is
   gonna be sent."
-  [topic-name key value]
-  (let [properties (create-properties)
-        producer (create-producer properties)
-        message (create-message topic-name key value)]
+  [producer topic-name key value]
+  (let [message (create-message topic-name key value)]
     (.send producer message callback)))
