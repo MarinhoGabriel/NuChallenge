@@ -33,18 +33,18 @@
   [value]
   (let [purchase (json/read-str (.value value) :key-fn keyword)]
     (produce-message "valid_purchase"
-                     (json/write-str {:service "br.com.marinho.creditmodel.purchasevalidator"
-                                      :id (:id purchase)})
-                     (json/write-str (.value value)))))
+                     (str {:service "br.com.marinho.creditmodel.purchasevalidator"
+                           :id      (:id purchase)})
+                     (str (.value value)))))
 
 (defn send-failure-message! "If the return of the function `valid-purchase?` returns
   `false`, this function is called to do the procedure when it's a invalid operation."
   [value]
   (let [purchase (json/read-str (.value value) :key-fn keyword)]
     (produce-message "cancelled_purchase"
-                     (json/write-str {:service "br.com.marinho.creditmodel.purchasevalidator"
-                                      :id (:id purchase)})
-                     (json/write-str (.value value)))))
+                     (str {:service "br.com.marinho.creditmodel.purchasevalidator"
+                           :id      (:id purchase)})
+                     (str (.value value)))))
 
 (defn start-consumption "Starts the consumer agent."
   []

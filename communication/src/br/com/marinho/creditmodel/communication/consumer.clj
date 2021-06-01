@@ -39,10 +39,10 @@
 (defn consume "Function responsible for start the consumption of the informed topic(s)
   using the consumer, also passed as parameter. The function uses a recur to keep
   reading information until a stop command is sent. Also, the function has 3 parameters
-   representing the functions used to
-   1. validate the value got from the server,
-   2. do an operation when the validation returns true,
-   3. do another (or not) operation when the validation returns false."
+  representing the functions used to
+  1. validate the value got from the server,
+  2. do an operation when the validation returns true,
+  3. do another (or not) operation when the validation returns false."
   [consumer topic valid? success fail]
   (with-open [cons consumer]
     (.subscribe cons topic)
@@ -56,3 +56,20 @@
               (success record)
               (fail record)))))
       (recur))))
+
+(defn consume-once "Function responsible for start the consumption of the informed
+  topic(s) using the consumer, also passed as parameter. The function, differently from
+  the function above, does not uses a recur to keep reading information. It just read
+  once. Also, the function has 3 parameters representing the functions used to
+  1. validate the value got from the server,
+  2. do an operation when the validation returns true,
+  3. do another (or not) operation when the validation returns false."
+  [consumer topic]
+  (with-open [cons consumer]
+    (.subscribe cons topic)
+    (loop []
+      (let [duration (Duration/ofSeconds 1)
+            poll-records (seq (.poll cons duration))]
+        (if (nil? poll-records)
+          (recur)
+          (first poll-records))))))

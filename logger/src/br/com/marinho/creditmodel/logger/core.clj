@@ -6,7 +6,11 @@
   on Kafka Client."
   []
   (let [consumer (consumer/create-consumer "br.com.marinho.creditmodel.logger")]
-    (consumer/consume consumer (Pattern/compile "br.com.marinho.creditmodel.*"))))
+    (consumer/consume consumer
+                      (Pattern/compile "br.com.marinho.creditmodel.*")
+                      (fn [value] true)
+                      (fn [value])
+                      (fn [value]))))
 
 ; Running the service (in loop)
 (run)

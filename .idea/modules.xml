@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/app-confirming/app-confirming.iml" filepath="$PROJECT_DIR$/app-confirming/app-confirming.iml" />
       <module fileurl="file://$PROJECT_DIR$/communication/communication.iml" filepath="$PROJECT_DIR$/communication/communication.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/creditmodel.iml" filepath="$PROJECT_DIR$/creditmodel.iml" />
