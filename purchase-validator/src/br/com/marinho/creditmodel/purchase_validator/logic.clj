@@ -41,7 +41,7 @@
   `false`, this function is called to do the procedure when it's a invalid operation."
   [value]
   (let [purchase (json/read-str (.value value) :key-fn keyword)]
-    (produce-message "cancelled_purchase"
+    (produce-message "canceled_purchase"
                      (str {:service "br.com.marinho.creditmodel.purchasevalidator"
                            :id      (:id purchase)})
                      (str (.value value)))))

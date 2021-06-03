@@ -11,9 +11,8 @@
 ;                                          "Streaming"
 ;                                          28.90
 ;                                          (.parse date-format "2021-03-19 21:05:33")
-;                                          "00000000000")]
+;                                          5888873461857775)]
 ;  (producer/send-message! producer
 ;                          "new_purchase"
 ;                          (json/write-str new-purchase)
 ;                          (json/write-str new-purchase)))
-

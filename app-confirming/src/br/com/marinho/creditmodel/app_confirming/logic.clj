@@ -4,7 +4,7 @@
             [clojure.data.json :as json]))
 
 ; Creating the producers that are going to send messages to the topics called
-; "available_limit_or_balance" and "canceled_purchase", to inform that the purchase was
+; "available_limit" and "canceled_purchase", to inform that the purchase was
 ; confirmed in the case of not confirmed, respectively.
 (def producer (producer/create-producer))
 
@@ -14,7 +14,7 @@
 
 (defn- confirm? "Confirms a purchase by reading the input from the terminal. If the
   input value is equal to 'confirm', the purchase is confirmed and a message is sent to
-  the kafka broker topic called 'available_limit_or_balance' with the purchase
+  the kafka broker topic called 'available_limit' with the purchase
   information."
   [value]
   (let [purchase (json/read-str (.value value) :key-fn keyword)
@@ -39,7 +39,7 @@
   [value]
   (println "Successful operation! Purchase confirmed!")
   (let [purchase (json/read-str (.value value) :key-fn keyword)]
-    (produce-message "available_limit_or_balance"
+    (produce-message "available_limit"
                      (str {:service "br.com.marinho.creditmodel.appconfirming"
                            :id      (:id purchase)})
                      (str (.value value)))))

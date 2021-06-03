@@ -8,54 +8,54 @@
             [datomic.api :as datomic]))
 
 ; Defining the connection as nil at first to redefine ir at `start-controller` method
-(def connection nil)
+(def connection (db/open-connection))
 
-(defn start-controller "Function responsible for deleting the old database and create a new
-  connection to start a new application."
+(defn start-controller "Function responsible for deleting the old database and create a
+  new connection to start a new application."
   []
-  ; Dropping database if exists
-  (db/drop-database)
-
-  ; Database connecton
-  (def connection (db/open-connection))
-
   ;; Creating the schemata
   (schemata/create-schemata connection))
 
-(defn- create-client "Creates a client using the created model defined at `br.com.marinho.creditmodel.core.model.client`.
-  The function receives the minus (-) sign as a visual indicator that this is a private function."
+(defn drop-creditmodel-database "Drops the database"
+  []
+  (db/drop-database))
+
+(defn- create-client "Creates a client using the created model defined at
+  `br.com.marinho.creditmodel.core.model.client`. The function receives the minus (-)
+  sign as a visual indicator that this is a private function."
   [name cpf email]
   (client/new-client name cpf email))
 
-(defn save-client! "Saves a client in databae using the `connection` object passed as parameter.
-  Inside the function, the `create-client` privte function is called to store the result value,
-  representing the new client, in a symbol inside of a `let` and, after that, this value is
-  used to store a new register in database."
+(defn save-client! "Saves a client in databae using the `connection` object passed as
+  parameter. Inside the function, the `create-client` privte function is called to
+  store the result value, representing the new client, in a symbol inside of a `let`
+  and, after that, this value is used to store a new register in database."
   [name cpf email]
   (let [client (create-client name cpf email)]
     (datomic/transact connection [client])))
 
-(defn get-clients "Returns all the clients stores in the database using a map structure, with `pull`
-  command."
+(defn get-clients "Returns all the clients stores in the database using a map structure,
+  with `pull` command."
   []
   (datomic/q '[:find (pull ?e [:client/name :client/email :client/cpf {:client/card [*]}])
                :where [?e :client/name]] (datomic/db connection)))
 
-(defn- save-card! "Saves a card in the database using the model created at `br.com.marinho.creditmodel.core.model.card`.
-  The function receives the minus (-) sign as a visual indicator that this is a private function.
-  The function returns the inserted object."
+(defn- save-card! "Saves a card in the database using the model created at
+  `br.com.marinho.creditmodel.core.model.card`. The function receives the minus (-)
+  sign as a visual indicator that this is a private function. The function returns the
+  inserted object."
   [card]
   @(datomic/transact connection [card]))
 
 (defn add-card-to-client! "Adds a card to the client, using the CPF.
-  The function creates a new card using the `card/new-card` function and stores it in database inside
-  a threading first execution. This threading first gives us the id of the insertion that was made in
-  database to use this id as the value for the client's card.
-  The last operation the function does is transacting the update in the client.
+  The function creates a new card using the `card/new-card` function and stores it in
+  database inside a threading first execution. This threading first gives us the id of
+  the insertion that was made in database to use this id as the value for the client's
+  card. The last operation the function does is transacting the update in the client.
 
-  *Important to say that, in Datomic, the value is associated to the key the same as the key is
-  associated to the value. That means that inside of the object `:client/card`, there is a client
-  and so on."
+  *Important to say that, in Datomic, the value is associated to the key the same as the
+  key is associated to the value. That means that inside of the object `:client/card`,
+  there is a client and so on."
   [client-cpf]
   (let [card (card/new-card)]
     (let [saved-card-id (-> (save-card! card) :tempids vals first)
@@ -76,15 +76,24 @@
                [?e :client/card ?card]]
              (datomic/db connection) client-cpf))
 
+(defn card-by-number "Returns a card given its number."
+  [number]
+  (let [connection (db/open-connection)]
+    (datomic/q '[:find (pull ?e [*])
+                 :in $ ?number
+                 :where [?e :card/number ?number]]
+               (datomic/db connection) number)))
+
 (defn save-purchase! "Saves a new purchase register in database.
-  At first, the function get the card id from the client who made the purchase, that is represented by the `client-cpf`
-  parameter. After getting the card id, the function just creates a new purchase object and saves it in database."
+  At first, the function get the card id from the client who made the purchase, that is
+  represented by the `client-cpf` parameter. After getting the card id, the function
+  just creates a new purchase object and saves it in database."
   [merchant category value date client-cpf]
   (let [card-id (:id (get (card-by-client client-cpf) 0))]
     (datomic/transact connection [(purchase/new-purchase merchant category value date card-id)])))
 
-(defn get-purchase "Returns the purchase list with all information about the purchase, including the card number and
-  the clients' name and cpf."
+(defn get-purchase "Returns the purchase list with all information about the purchase,
+  including the card number and the clients' name and cpf."
   []
   (datomic/q '[:find ?merchant ?category ?price ?date ?number ?name ?cpf
                :keys purchase/merchant purchase/category purchase/price purchase/date card/number client/name client/cpf
@@ -98,9 +107,10 @@
                [?client :client/name ?name]
                [?client :client/cpf ?cpf]] (datomic/db connection)))
 
-(defn purchases-by-client? "Returns all purchases made by a client with the CPF value equals to `client-cpf` parameter.
-  Differently from the method above, this method does not return the clients' name and CPF because we're talking
-  about all purchases made by JUST ONE client."
+(defn purchases-by-client? "Returns all purchases made by a client with the CPF value
+  equals to `client-cpf` parameter. Differently from the method above, this method does
+  not return the clients' name and CPF because we're talking about all purchases made
+  by JUST ONE client."
   [client-cpf]
   (datomic/q '[:find ?merchant ?category ?price ?date ?number
                :in $ ?client-cpf
@@ -114,8 +124,8 @@
                [?client :client/cpf ?client-cpf]
                [?client :client/card ?card]] (datomic/db connection) client-cpf))
 
-(defn max-purchase-count-by-client? "Returns the name of the name of the client who has the higher number of purchases
-  saved in the database.
+(defn max-purchase-count-by-client? "Returns the name of the name of the client who has
+  the higher number of purchases saved in the database.
   The method used a threading last to:
     1. get the map of `total_purchases` by `client_name`
     2. getting the higher key
@@ -131,7 +141,8 @@
        (:client)
        (println "The client who made more purchases was")))
 
-(defn most-valued-purchase? "Returns the name of the client who made the most valued purchase."
+(defn most-valued-purchase? "Returns the name of the client who made the most valued
+  purchase."
   []
   (->> (datomic/q '[:find ?name
                     :where [(q '[:find (max ?value)
@@ -144,7 +155,8 @@
        ffirst
        (println "Most valued purchase made by")))
 
-(defn client-with-no-purchase? "Returns the name of the client who does not made any purchases."
+(defn client-with-no-purchase? "Returns the name of the client who does not made any
+  purchases."
   []
   (let [client (->> (datomic/q '[:find ?name
                                  :where [?card :card/number]
@@ -155,5 +167,5 @@
                                  ], (datomic/db connection))
                     ffirst)]
     (if client
-       (str (str client) " hasn't made any purchase.")
-       (str "All clients have made at least one purchase."))))
+      (str (str client) " hasn't made any purchase.")
+      (str "All clients have made at least one purchase."))))
