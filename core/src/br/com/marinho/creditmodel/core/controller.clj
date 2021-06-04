@@ -7,8 +7,19 @@
             [br.com.marinho.creditmodel.core.db.schema :as schemata]
             [datomic.api :as datomic]))
 
-; Defining the connection as nil at first to redefine ir at `start-controller` method
-(def connection (db/open-connection))
+; URI used to connect and disconnect from the database.
+(def uri nil)
+
+; Defining the connection as nil at first to redefine ir at `define-uri` function.
+(def connection nil)
+
+(defn define-uri "Defines the value of the uri used in to connect to the database."
+  [uri]
+  (def uri uri))
+
+(defn start-connection "Starts the connection with the database"
+  []
+  (def connection (db/open-connection uri)))
 
 (defn start-controller "Function responsible for deleting the old database and create a
   new connection to start a new application."
@@ -16,9 +27,9 @@
   ;; Creating the schemata
   (schemata/create-schemata connection))
 
-(defn drop-creditmodel-database "Drops the database"
+(defn drop-database "Drops the database."
   []
-  (db/drop-database))
+  (db/drop-database uri))
 
 (defn- create-client "Creates a client using the created model defined at
   `br.com.marinho.creditmodel.core.model.client`. The function receives the minus (-)
@@ -78,19 +89,24 @@
 
 (defn card-by-number "Returns a card given its number."
   [number]
-  (let [connection (db/open-connection)]
-    (datomic/q '[:find (pull ?e [*])
-                 :in $ ?number
-                 :where [?e :card/number ?number]]
-               (datomic/db connection) number)))
+  (datomic/q '[:find (pull ?e [*])
+               :in $ ?number
+               :where [?e :card/number ?number]]
+             (datomic/db connection) number))
 
 (defn save-purchase! "Saves a new purchase register in database.
   At first, the function get the card id from the client who made the purchase, that is
   represented by the `client-cpf` parameter. After getting the card id, the function
   just creates a new purchase object and saves it in database."
   [merchant category value date client-cpf]
-  (let [card-id (:id (get (card-by-client client-cpf) 0))]
-    (datomic/transact connection [(purchase/new-purchase merchant category value date card-id)])))
+  (if-not (not-any? nil? [merchant category value date client-cpf])
+    (throw (NullPointerException. "Fields cannot be nil."))
+    (do
+      (let [card-id (:id (get (card-by-client client-cpf) 0))]
+        (if (nil? card-id)
+          (throw (NullPointerException. "Client has not a card."))
+          (datomic/transact connection [(purchase/new-purchase merchant category value
+                                                               date card-id)]))))))
 
 (defn get-purchase "Returns the purchase list with all information about the purchase,
   including the card number and the clients' name and cpf."

@@ -2,14 +2,11 @@
   (:use clojure.pprint)
   (:require [datomic.api :as datomic]))
 
-; Database URI used to open the connection
-(def uri "datomic:dev://localhost:4334/creditmodel")
-
 (defn open-connection "Creates the database and connects to it."
-  []
+  [uri]
   (datomic/create-database uri)
   (datomic/connect uri))
 
 (defn drop-database "Drops the database."
-  []
+  [uri]
   (datomic/delete-database uri))

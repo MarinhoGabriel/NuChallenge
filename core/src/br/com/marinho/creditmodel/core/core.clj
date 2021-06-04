@@ -10,6 +10,7 @@
 (defn run "Runs the application doing all its functionalities"
   []
   ;; Starting the controller to create the schemata and open the connection
+  (controller/define-uri "datomic:dev://localhost:4334/creditmodel")
   (controller/start-controller)
 
   ;; Inserting clients in database
