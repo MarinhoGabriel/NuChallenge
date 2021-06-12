@@ -6,9 +6,10 @@
       <module fileurl="file://$PROJECT_DIR$/communication/communication.iml" filepath="$PROJECT_DIR$/communication/communication.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/creditmodel.iml" filepath="$PROJECT_DIR$/creditmodel.iml" />
-      <module fileurl="file://$PROJECT_DIR$/limit-checker/limit-checker.iml" filepath="$PROJECT_DIR$/limit-chacker/limit-chaeker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/limit-checker/limit-checker.iml" filepath="$PROJECT_DIR$/limit-checker/limit-checker.iml" />
       <module fileurl="file://$PROJECT_DIR$/logger/logger.iml" filepath="$PROJECT_DIR$/logger/logger.iml" />
       <module fileurl="file://$PROJECT_DIR$/purchase-validator/purchase-validator.iml" filepath="$PROJECT_DIR$/purchase-validator/purchase-validator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/purchaser/purchaser.iml" filepath="$PROJECT_DIR$/purchaser/purchaser.iml" />
     </modules>
   </component>
 </project>

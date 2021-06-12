@@ -10,6 +10,7 @@
         <option value="file://$PROJECT_DIR$/purchase-validator/project.clj" />
         <option value="file://$PROJECT_DIR$/app-confirming/project.clj" />
         <option value="file://$PROJECT_DIR$/limit-checker/project.clj" />
+        <option value="file://$PROJECT_DIR$/purchaser/project.clj" />
       </list>
     </option>
   </component>
