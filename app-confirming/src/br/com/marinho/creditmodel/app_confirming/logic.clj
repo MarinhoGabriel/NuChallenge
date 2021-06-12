@@ -1,6 +1,7 @@
 (ns br.com.marinho.creditmodel.app-confirming.logic
   (:require [br.com.marinho.creditmodel.communication.producer :as producer]
             [br.com.marinho.creditmodel.communication.consumer :as consumer]
+            [br.com.marinho.creditmodel.core.constants.kafka-topics :as topics]
             [clojure.data.json :as json]))
 
 ; Creating the producers that are going to send messages to the topics called
@@ -24,8 +25,8 @@
              "worth R$"
              (:value purchase)
              "in the app.")
-    (let [record (consumer/consume-once c ["user_confirmation"])]
-      (println "message received" (.value record))
+    (let [record (consumer/consume-once c [topics/USER_CONFIRMATION])]
+      (println record)
       (= "confirm" (.value record)))))
 
 (defn- produce-message "Produces a message to send to the kafka client using the
@@ -39,7 +40,7 @@
   [value]
   (println "Successful operation! Purchase confirmed!")
   (let [purchase (json/read-str (.value value) :key-fn keyword)]
-    (produce-message "available_limit"
+    (produce-message topics/PURCHASE_CONFIRMED
                      (str {:service "br.com.marinho.creditmodel.appconfirming"
                            :id      (:id purchase)})
                      (str (.value value)))))
@@ -49,7 +50,7 @@
   [value]
   (println "Purchase unconfirmed. Canceling the purchase.")
   (let [purchase (json/read-str (.value value) :key-fn keyword)]
-    (produce-message "canceled_purchase"
+    (produce-message topics/CANCELED_PURCHASE
                      (str {:service "br.com.marinho.creditmodel.appconfirming"
                            :id      (:id purchase)})
                      (str (.value value)))))
@@ -58,7 +59,7 @@
   []
   (println "Starting App Confirming Service...")
   (consumer/consume consumer
-                    ["valid_purchase"]
+                    [topics/VALID_PURCHASE]
                     (fn [value] (confirm? value))
                     (fn [value] (send-successful-message! value))
                     (fn [value] (send-failure-message! value))))

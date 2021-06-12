@@ -1,6 +1,7 @@
 (ns br.com.marinho.creditmodel.purchase-validator.logic
   (:require [br.com.marinho.creditmodel.communication.producer :as producer]
-            [br.com.marinho.creditmodel.communication.consumer :as consumer])
+            [br.com.marinho.creditmodel.communication.consumer :as consumer]
+            [br.com.marinho.creditmodel.core.constants.kafka-topics :as topics])
   (:require [clojure.data.json :as json]))
 
 ; Creating the producers that are going to send messages to the topics called
@@ -32,7 +33,7 @@
   operation."
   [value]
   (let [purchase (json/read-str (.value value) :key-fn keyword)]
-    (produce-message "valid_purchase"
+    (produce-message topics/VALID_PURCHASE
                      (str {:service "br.com.marinho.creditmodel.purchasevalidator"
                            :id      (:id purchase)})
                      (str (.value value)))))
@@ -41,7 +42,7 @@
   `false`, this function is called to do the procedure when it's a invalid operation."
   [value]
   (let [purchase (json/read-str (.value value) :key-fn keyword)]
-    (produce-message "canceled_purchase"
+    (produce-message topics/CANCELED_PURCHASE
                      (str {:service "br.com.marinho.creditmodel.purchasevalidator"
                            :id      (:id purchase)})
                      (str (.value value)))))
@@ -50,7 +51,7 @@
   []
   (println "Starting Purchase Validator Service...")
   (consumer/consume consumer
-                    ["new_purchase"]
+                    [topics/NEW_PURCHASE]
                     (fn [value] (valid-purchase? value))
                     (fn [value] (send-successful-message! value))
                     (fn [value] (send-failure-message! value))))

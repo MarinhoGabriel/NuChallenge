@@ -108,6 +108,16 @@
           (datomic/transact connection [(purchase/new-purchase merchant category value
                                                                date card-id)]))))))
 
+(defn save-purchase-with-card! "Saves a new purchase register in database.
+  At first, the function get the card id from the client who made the purchase, that is
+  represented by the `client-cpf` parameter. After getting the card id, the function
+  just creates a new purchase object and saves it in database."
+  [merchant category value date card-id]
+  (if-not (not-any? nil? [merchant category value date card-id])
+    (throw (NullPointerException. "Fields cannot be nil."))
+    (println (datomic/transact connection [(purchase/new-purchase merchant category value
+                                                                  date card-id)]))))
+
 (defn get-purchase "Returns the purchase list with all information about the purchase,
   including the card number and the clients' name and cpf."
   []

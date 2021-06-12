@@ -1,6 +1,7 @@
 (ns br.com.marinho.creditmodel.communication.core
   (:require [br.com.marinho.creditmodel.communication.producer :as producer]
             [br.com.marinho.creditmodel.core.model.purchase :as purchase]
+            [br.com.marinho.creditmodel.core.constants.kafka-topics :as topoic]
             [clojure.data.json :as json])
   (:import (java.text SimpleDateFormat)))
 
@@ -11,7 +12,7 @@
 ;                                          "Streaming"
 ;                                          28.90
 ;                                          (.parse date-format "2021-03-19 21:05:33")
-;                                          5888873461857775)]
+;                                          5678776843479652)]
 ;  (producer/send-message! producer
 ;                          "new_purchase"
 ;                          (json/write-str new-purchase)
