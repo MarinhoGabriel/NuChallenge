@@ -16,3 +16,7 @@ Below we can see the diagram of the communication system of the project.<br>
 ;; in collection under :dependencies key
 [br.com.marinho/creditmodel "0.1.0"]
 ```
+
+## Authors
+
+Gabriel Marinho
